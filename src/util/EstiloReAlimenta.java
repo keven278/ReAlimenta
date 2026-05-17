@@ -4,6 +4,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+import org.kordamp.ikonli.swing.FontIcon;
 
 public final class EstiloReAlimenta {
     // CORES
@@ -132,15 +134,25 @@ public final class EstiloReAlimenta {
         return btn;
     }
 
+    // ÍCONES IKONLI
+    public static JLabel criarIcone(
+            FontAwesomeSolid icone,
+            int tamanho,
+            Color cor
+    ) {
+        FontIcon icon = FontIcon.of(icone, tamanho);
+        icon.setIconColor(cor);
+        JLabel lbl = new JLabel(icon);
+        lbl.setOpaque(false);
+        return lbl;
+    }
+
     // criarCampoTexto — wrapper arredondado com ícone PNG e campo
-    public static JPanel criarCampoTexto(JTextField campo,
-                                         String placeholder,
-                                         String caminhoIcone) {
+    public static JPanel criarCampoTexto(JTextField campo, String placeholder, FontAwesomeSolid icone) {
         estilizarCampo(campo);
         adicionarPlaceholder(campo, placeholder);
-
         JPanel w = criarWrapper();
-        w.add(carregarIcone(caminhoIcone, 20), BorderLayout.WEST);
+        w.add(criarIcone(icone, 16, TEXTO_SUAVE), BorderLayout.WEST);
         w.add(campo, BorderLayout.CENTER);
         return w;
     }
@@ -149,9 +161,9 @@ public final class EstiloReAlimenta {
     public static JPanel criarCampoSenha(JPasswordField campo, String placeholder) {
         estilizarCampoSenha(campo, placeholder);
         JPanel w = criarWrapper();
-        w.add(carregarIcone("assets/icons/lock.png", 20), BorderLayout.WEST);
+        w.add(criarIcone(FontAwesomeSolid.LOCK, 16, TEXTO_SUAVE), BorderLayout.WEST);
         w.add(campo, BorderLayout.CENTER);
-        w.add(criarBotaoOlho(campo),                      BorderLayout.EAST);
+        w.add(criarBotaoOlho(campo), BorderLayout.EAST);
         return w;
     }
 
@@ -217,15 +229,17 @@ public final class EstiloReAlimenta {
         }
     }
 
-    // 6. Cabeçalho padrão para telas de cadastro
+    // Cabeçalho padrão para telas de cadastro
 
-    public static JPanel criarCabecalho(String titulo, String subtitulo, String iconeDir, Runnable acaoVoltar) {
+    public static JPanel criarCabecalho(String titulo, String subtitulo, FontAwesomeSolid iconeDir, Runnable acaoVoltar) {
         JPanel header = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setPaint(new GradientPaint(0, 0, VERDE_PRINCIPAL, getWidth(), 0, new Color(0x1A, 0x7A, 0x4A)));
+                g2.setPaint(
+                        new GradientPaint(0, 0, VERDE_PRINCIPAL, getWidth(), 0, new Color(0x1A, 0x7A, 0x4A))
+                );
                 g2.fillRect(0, 0, getWidth(), getHeight());
             }
         };
@@ -233,24 +247,21 @@ public final class EstiloReAlimenta {
         header.setPreferredSize(new Dimension(0, 76));
         header.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
-        // Botão ← Voltar
+        // BOTÃO VOLTAR
         header.add(criarBotaoVoltar(acaoVoltar), BorderLayout.WEST);
 
-        // Bloco central: título + subtítulo
+        // CENTRO
         JPanel centro = new JPanel();
         centro.setOpaque(false);
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
-
         JLabel lblTitulo = new JLabel(titulo);
         lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitulo.setForeground(BRANCO);
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         JLabel lblSub = new JLabel(subtitulo);
         lblSub.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblSub.setForeground(new Color(255, 255, 255, 200));
+        lblSub.setForeground(new Color(255,255,255,200));
         lblSub.setAlignmentX(Component.CENTER_ALIGNMENT);
-
         centro.add(Box.createVerticalGlue());
         centro.add(lblTitulo);
         centro.add(Box.createVerticalStrut(2));
@@ -258,11 +269,9 @@ public final class EstiloReAlimenta {
         centro.add(Box.createVerticalGlue());
         header.add(centro, BorderLayout.CENTER);
 
-        // Ícone direito
-        if (iconeDir != null && !iconeDir.isEmpty()) {
-            JLabel ico = new JLabel(iconeDir);
-            ico.setFont(new Font("Segoe UI", Font.PLAIN, 24));
-            ico.setForeground(new Color(255, 255, 255, 180));
+        // ÍCONE DIREITO
+        if (iconeDir != null) {
+            JLabel ico = criarIcone(iconeDir, 22, BRANCO);
             header.add(ico, BorderLayout.EAST);
         }
         return header;
@@ -304,17 +313,28 @@ public final class EstiloReAlimenta {
         return label;
     }
 
-    // ITEM DE MENU LATERAL com ícone, texto e hover
-    public static JPanel criarItemMenu(String caminhoIcone, String texto, Runnable acao) {
-        JPanel item = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 6)) {
+// ITEM DE MENU LATERAL com IKONLI
+    public static JPanel criarItemMenu(FontAwesomeSolid icone, String texto, Runnable acao) {
+        JPanel item = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8)) {
             boolean hover = false;
             {
                 setOpaque(false);
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 addMouseListener(new MouseAdapter() {
-                    @Override public void mouseEntered(MouseEvent e) { hover = true;  repaint(); }
-                    @Override public void mouseExited (MouseEvent e) { hover = false; repaint(); }
-                    @Override public void mouseClicked(MouseEvent e) { acao.run(); }
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        hover = true;
+                        repaint();
+                    }
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        hover = false;
+                        repaint();
+                    }
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (acao != null) {acao.run();}
+                    }
                 });
             }
             @Override
@@ -323,24 +343,27 @@ public final class EstiloReAlimenta {
                     Graphics2D g2 = (Graphics2D) g.create();
                     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     g2.setColor(new Color(255, 255, 255, 30));
-                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10
+                    );
                     g2.dispose();
                 }
                 super.paintComponent(g);
             }
         };
-        item.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+        item.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+        item.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
 
-        // Ícone
-        JLabel iconeLabel = carregarIcone(caminhoIcone, 18);
-        item.add(iconeLabel);
+        // ÍCONE
+        JLabel lblIcone = criarIcone(icone, 16, BRANCO);
 
-        // Texto
+        // TEXTO
         JLabel lblTexto = new JLabel(texto);
         lblTexto.setFont(FONTE_MENU);
         lblTexto.setForeground(BRANCO);
-        item.add(lblTexto);
 
+        // ADD
+        item.add(lblIcone);
+        item.add(lblTexto);
         return item;
     }
 
@@ -422,7 +445,7 @@ public final class EstiloReAlimenta {
 
     // Botão olho para alternar visibilidade de senha
     private static JLabel criarBotaoOlho(JPasswordField campo) {
-        JLabel olho = carregarIcone("assets/icons/eye.png", 18);
+        JLabel olho = criarIcone(FontAwesomeSolid.EYE, 16, TEXTO_SUAVE);
         olho.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         olho.addMouseListener(new MouseAdapter() {
             boolean visivel = false;
@@ -437,36 +460,35 @@ public final class EstiloReAlimenta {
 
     // Botão ← Voltar para cabeçalhos
     private static JButton criarBotaoVoltar(Runnable acao) {
-        JButton btn = new JButton("←") {
-            boolean hover = false;
-            {
-                addMouseListener(new MouseAdapter() {
-                    @Override public void mouseEntered(MouseEvent e) { hover = true;  repaint(); }
-                    @Override public void mouseExited (MouseEvent e) { hover = false; repaint(); }
-                });
-            }
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
-                if (hover) {
-                    g2.setColor(new Color(255, 255, 255, 40));
-                    g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                }
-                g2.setColor(BRANCO);
-                g2.setFont(new Font("Segoe UI", Font.BOLD, 20));
-                FontMetrics fm = g2.getFontMetrics();
-                g2.drawString(getText(), (getWidth()  - fm.stringWidth(getText())) / 2, (getHeight() + fm.getAscent() - fm.getDescent()) / 2);
-                g2.dispose();
-            }
-        };
+        JButton btn = new JButton();
+        btn.setIcon(FontIcon.of(FontAwesomeSolid.ARROW_LEFT, 18, BRANCO));
         btn.setPreferredSize(new Dimension(40, 40));
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
+        btn.setOpaque(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.addActionListener(e -> acao.run());
+        btn.addMouseListener(
+                new MouseAdapter() {
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        btn.setOpaque(true);
+                        btn.setBackground(new Color(255, 255, 255, 40));
+                    }
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        btn.setOpaque(false);
+                        btn.setBackground(null);
+                    }
+                }
+        );
+        btn.addActionListener(
+                e -> {
+                    if (acao != null) {
+                        acao.run();
+                    }
+                }
+        );
         return btn;
     }
 }

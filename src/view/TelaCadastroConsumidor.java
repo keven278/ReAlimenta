@@ -1,16 +1,19 @@
 package view;
 import util.EstiloReAlimenta;
 import util.EstiloReAlimenta.RoundedPanel;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class TelaCadastroConsumidor extends JFrame {
-    private final JFrame    telaPai;
-    private JTextField      campoNome;
-    private JTextField      campoCpf;
-    private JPasswordField  campoSenha;
-    private JPasswordField  campoConfirmar;
+    private final JFrame   telaPai;
+    private JTextField     campoNome;
+    private JTextField     campoCpf;
+    private JTextField     campoTelefone;
+    private JTextField     campoEmail;
+    private JPasswordField campoSenha;
+    private JPasswordField campoConfirmar;
 
     public TelaCadastroConsumidor(JFrame telaPai) {
         this.telaPai = telaPai;
@@ -19,14 +22,14 @@ public class TelaCadastroConsumidor extends JFrame {
         setVisible(true);
     }
 
-    // Configuração básica da janela
+    // CONFIGURAÇÃO DA JANELA
     private void configurarJanela() {
         setTitle("ReAlimenta | Cadastro de Consumidor");
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override public void windowClosing(WindowEvent e) { voltarLogin(); }
         });
-        setSize(560, 640);
+        setSize(580, 720);
         setLocationRelativeTo(null);
         setResizable(false);
         getContentPane().setBackground(EstiloReAlimenta.FUNDO);
@@ -34,28 +37,30 @@ public class TelaCadastroConsumidor extends JFrame {
     }
 
     private void construirInterface() {
+        // Cabeçalho com ícone FontAwesome — sem PNG, sem emoji
         add(EstiloReAlimenta.criarCabecalho(
                 "Cadastro de Consumidor",
                 "Preencha os dados abaixo para criar sua conta",
-                "👤",
+                FontAwesomeSolid.USER_PLUS,
                 this::voltarLogin
         ), BorderLayout.NORTH);
+
         add(EstiloReAlimenta.criarAreaScroll(criarCardFormulario()), BorderLayout.CENTER);
     }
 
-    // ── CARD DE FORMULÁRIO ───────────────────────────────────────
+    // CARD DE FORMULÁRIO
     private JPanel criarCardFormulario() {
         RoundedPanel card = new RoundedPanel(16, EstiloReAlimenta.BRANCO);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(BorderFactory.createEmptyBorder(32, 36, 32, 36));
-        card.setPreferredSize(new Dimension(460, 520));
+        card.setPreferredSize(new Dimension(460, 640));
 
         // NOME COMPLETO
         card.add(EstiloReAlimenta.criarLabel("Nome Completo"));
         card.add(Box.createVerticalStrut(5));
         campoNome = new JTextField();
         card.add(EstiloReAlimenta.criarCampoTexto(
-                campoNome, "Digite seu nome completo", "assets/icons/user.png"));
+                campoNome, "Digite seu nome completo", FontAwesomeSolid.USER));
         card.add(Box.createVerticalStrut(13));
 
         // CPF
@@ -63,10 +68,26 @@ public class TelaCadastroConsumidor extends JFrame {
         card.add(Box.createVerticalStrut(5));
         campoCpf = new JTextField();
         card.add(EstiloReAlimenta.criarCampoTexto(
-                campoCpf, "Digite seu CPF", "assets/icons/document.png"));
+                campoCpf, "Digite seu CPF", FontAwesomeSolid.ID_CARD));
         card.add(Box.createVerticalStrut(13));
 
-        // SENHA
+        // TELEFONE
+        card.add(EstiloReAlimenta.criarLabel("Telefone"));
+        card.add(Box.createVerticalStrut(5));
+        campoTelefone = new JTextField();
+        card.add(EstiloReAlimenta.criarCampoTexto(
+                campoTelefone, "Digite seu telefone", FontAwesomeSolid.PHONE));
+        card.add(Box.createVerticalStrut(13));
+
+        // EMAIL
+        card.add(EstiloReAlimenta.criarLabel("E-mail"));
+        card.add(Box.createVerticalStrut(5));
+        campoEmail = new JTextField();
+        card.add(EstiloReAlimenta.criarCampoTexto(
+                campoEmail, "Digite seu e-mail", FontAwesomeSolid.ENVELOPE));
+        card.add(Box.createVerticalStrut(13));
+
+        // SENHA — LOCK + EYE encapsulados em criarCampoSenha
         card.add(EstiloReAlimenta.criarLabel("Senha"));
         card.add(Box.createVerticalStrut(5));
         campoSenha = new JPasswordField();
@@ -78,9 +99,9 @@ public class TelaCadastroConsumidor extends JFrame {
         card.add(Box.createVerticalStrut(5));
         campoConfirmar = new JPasswordField();
         card.add(EstiloReAlimenta.criarCampoSenha(campoConfirmar, "Confirme sua senha"));
-        card.add(Box.createVerticalStrut(16));
+        card.add(Box.createVerticalStrut(10));
 
-        // Dica de senha
+        // Dica
         JLabel lblDica = new JLabel("Sua senha deve ter pelo menos 6 caracteres.");
         lblDica.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblDica.setForeground(EstiloReAlimenta.TEXTO_SUAVE);
@@ -92,12 +113,12 @@ public class TelaCadastroConsumidor extends JFrame {
         card.add(EstiloReAlimenta.criarBotaoPrimario("Registrar", e -> realizarCadastro()));
         card.add(Box.createVerticalStrut(16));
 
-        // Link de volta ao login
+        // Link voltar
         card.add(criarLinkVoltar());
         return card;
     }
 
-    // Link "Já tem uma conta? Voltar para o login"
+    // LINK VOLTAR
     private JPanel criarLinkVoltar() {
         JPanel linha = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 0));
         linha.setOpaque(false);
@@ -111,8 +132,8 @@ public class TelaCadastroConsumidor extends JFrame {
         lblLink.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblLink.setForeground(EstiloReAlimenta.VERDE_SECUNDARIO);
         lblLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        lblLink.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override public void mouseClicked(java.awt.event.MouseEvent e) { voltarLogin(); }
+        lblLink.addMouseListener(new MouseAdapter() {
+            @Override public void mouseClicked(MouseEvent e) { voltarLogin(); }
         });
 
         linha.add(lblTexto);
@@ -124,6 +145,8 @@ public class TelaCadastroConsumidor extends JFrame {
     private void realizarCadastro() {
         String nome     = campoNome.getText().trim();
         String cpf      = campoCpf.getText().trim();
+        String telefone = campoTelefone.getText().trim();
+        String email    = campoEmail.getText().trim();
         String senha    = new String(campoSenha.getPassword());
         String confirma = new String(campoConfirmar.getPassword());
 
@@ -133,12 +156,19 @@ public class TelaCadastroConsumidor extends JFrame {
         if (cpf.isEmpty() || cpf.equals("Digite seu CPF")) {
             mostrarErro("O campo CPF é obrigatório."); return;
         }
+        if (telefone.isEmpty() || telefone.equals("Digite seu telefone")) {
+            mostrarErro("O campo Telefone é obrigatório."); return;
+        }
+        if (email.isEmpty() || email.equals("Digite seu e-mail")) {
+            mostrarErro("O campo E-mail é obrigatório."); return;
+        }
         if (senha.length() < 6) {
             mostrarErro("A senha deve ter pelo menos 6 caracteres."); return;
         }
         if (!senha.equals(confirma)) {
             mostrarErro("As senhas não coincidem."); return;
         }
+
         JOptionPane.showMessageDialog(this,
                 "Consumidor cadastrado com sucesso!\n(Integração com banco de dados pendente)",
                 "Cadastro Realizado", JOptionPane.INFORMATION_MESSAGE);

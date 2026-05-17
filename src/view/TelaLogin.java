@@ -1,14 +1,15 @@
 package view;
 import util.EstiloReAlimenta;
 import util.EstiloReAlimenta.RoundedPanel;
+import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 public class TelaLogin extends JFrame {
-    private JTextField    campoCpfCnpj;
+    private JTextField     campoCpfCnpj;
     private JPasswordField campoSenha;
-    private JCheckBox     checkLembrar;
+    private JCheckBox      checkLembrar;
 
     public TelaLogin() {
         configurarJanela();
@@ -16,7 +17,7 @@ public class TelaLogin extends JFrame {
         setVisible(true);
     }
 
-    // Configuração básica da janela
+    // CONFIGURAÇÃO DA JANELA
     private void configurarJanela() {
         setTitle("ReAlimenta | Sistema de Doação de Alimentos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,7 +33,7 @@ public class TelaLogin extends JFrame {
         add(criarPainelCentral(), BorderLayout.CENTER);
     }
 
-    // PAINEL LATERAL
+    // PAINEL LATERAL (SIDEBAR VERDE)
     private JPanel criarPainelLateral() {
         JPanel painel = new JPanel() {
             @Override
@@ -49,7 +50,7 @@ public class TelaLogin extends JFrame {
         painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
         painel.setBorder(BorderFactory.createEmptyBorder(30, 20, 30, 20));
 
-        // Logo
+        // Logo maçã desenhada via Graphics2D
         painel.add(EstiloReAlimenta.criarLogoMaca());
         painel.add(Box.createVerticalStrut(8));
 
@@ -69,14 +70,10 @@ public class TelaLogin extends JFrame {
         painel.add(sep);
         painel.add(Box.createVerticalStrut(20));
 
-        // Itens de menu
-        painel.add(EstiloReAlimenta.criarItemMenu("assets/icons/home.png",
-                "Início", () -> {}));
-        painel.add(EstiloReAlimenta.criarItemMenu("assets/icons/info.png",
-                "Sobre o Projeto", this::mostrarSobreProjeto));
-        painel.add(EstiloReAlimenta.criarItemMenu("assets/icons/help.png",
-                "Como Funciona", this::mostrarComoFunciona));
-
+        // Itens de menu com Ikonli — sem PNG
+        painel.add(EstiloReAlimenta.criarItemMenu(FontAwesomeSolid.HOME, "Início", () -> {}));
+        painel.add(EstiloReAlimenta.criarItemMenu(FontAwesomeSolid.INFO_CIRCLE, "Sobre o Projeto", this::mostrarSobreProjeto));
+        painel.add(EstiloReAlimenta.criarItemMenu(FontAwesomeSolid.QUESTION_CIRCLE, "Como Funciona", this::mostrarComoFunciona));
         painel.add(Box.createVerticalGlue());
 
         // Versão
@@ -85,10 +82,11 @@ public class TelaLogin extends JFrame {
         lblVersao.setForeground(new Color(255, 255, 255, 130));
         lblVersao.setAlignmentX(Component.CENTER_ALIGNMENT);
         painel.add(lblVersao);
+
         return painel;
     }
 
-    // ── PAINEL CENTRAL ───────────────────────────────────────────
+    //  PAINEL CENTRAL
     private JPanel criarPainelCentral() {
         JPanel painel = new JPanel(new GridBagLayout());
         painel.setBackground(EstiloReAlimenta.FUNDO);
@@ -116,15 +114,15 @@ public class TelaLogin extends JFrame {
         card.add(lblSub);
         card.add(Box.createVerticalStrut(24));
 
-        // CPF / CNPJ
+        // CPF / CNPJ — ícone via Ikonli
         card.add(EstiloReAlimenta.criarLabel("CPF ou CNPJ"));
         card.add(Box.createVerticalStrut(5));
         campoCpfCnpj = new JTextField();
         card.add(EstiloReAlimenta.criarCampoTexto(
-                campoCpfCnpj, "Digite seu CPF ou CNPJ", "assets/icons/user.png"));
+                campoCpfCnpj, "Digite seu CPF ou CNPJ", FontAwesomeSolid.USER));
         card.add(Box.createVerticalStrut(14));
 
-        // SENHA
+        // SENHA — ícone LOCK + olho já encapsulados em criarCampoSenha
         card.add(EstiloReAlimenta.criarLabel("Senha"));
         card.add(Box.createVerticalStrut(5));
         campoSenha = new JPasswordField();
@@ -164,10 +162,14 @@ public class TelaLogin extends JFrame {
         String senha   = new String(campoSenha.getPassword()).trim();
 
         if (cpfCnpj.isEmpty() || cpfCnpj.equals("Digite seu CPF ou CNPJ") || senha.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Preencha o CPF/CNPJ e a senha para continuar.", "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Preencha o CPF/CNPJ e a senha para continuar.",
+                    "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        JOptionPane.showMessageDialog(this, "Login realizado com sucesso!\n(Integração com backend pendente)", "Bem-vindo(a)!", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+                "Login realizado com sucesso!\n(Integração com backend pendente)",
+                "Bem-vindo(a)!", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void abrirTelaCadastroConsumidor() {
