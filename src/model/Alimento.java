@@ -14,6 +14,16 @@ public class Alimento {
 
     public Alimento() {
     }
+    public Alimento(int id, String nome, String categoria, LocalDate validade, int quantidade, String descricao, String imagem,  Comerciante comerciante) {
+        this.id = id;
+        this.nome = nome;
+        this.categoria = categoria;
+        this.validade = validade;
+        this.quantidade = quantidade;
+        this.descricao = descricao;
+        this.imagem = imagem;
+        this.comerciante = new Comerciante();
+    }
 
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
