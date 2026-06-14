@@ -14,5 +14,4 @@ public class Conexao {
         return DriverManager.getConnection(URL, USUARIO, SENHA);
 
     }
-
 }

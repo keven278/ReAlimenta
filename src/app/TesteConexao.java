@@ -2,7 +2,6 @@ package app;
 
 import util.Conexao;
 import java.sql.Connection;
-import java.DriveManager.*;
 
 
 public class TesteConexao {

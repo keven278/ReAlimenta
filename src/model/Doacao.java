@@ -17,7 +17,7 @@ public class Doacao {
     public void setId(int id) {this.id = id;}
     public Alimento getAlimento() {return alimento;}
     public void setAlimento(Alimento alimento) {this.alimento = alimento;}
-    public int getQuantidade() {return quantidade;}
+    public int getQuantidade() {return  quantidade;}
     public void setQuantidade(int quantidade) {this.quantidade = quantidade;}
     public LocalDate getDataLimite() {return dataLimite;}
     public void setDataLimite(LocalDate dataLimite) {this.dataLimite = dataLimite;}
