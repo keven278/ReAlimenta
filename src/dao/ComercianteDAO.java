@@ -7,9 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-
-
-
     public class ComercianteDAO {
         public void inserir(Comerciante comerciante){
             String sql ="INSERT INTO comerciante" + "nome,telefone,senha,cnpj,endereco,nomeLoja" +
