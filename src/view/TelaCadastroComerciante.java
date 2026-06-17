@@ -13,6 +13,7 @@ public class TelaCadastroComerciante extends JFrame {
     private JTextField     campoCnpj;
     private JTextField     campoEndereco;
     private JTextField     campoTelefone;
+    private JTextField     campoEmail;
     private JPasswordField campoSenha;
     private JPasswordField campoConfirmar;
 
@@ -90,6 +91,13 @@ public class TelaCadastroComerciante extends JFrame {
         card.add(EstiloReAlimenta.criarCampoTexto(campoTelefone, "Digite o telefone de contato", FontAwesomeSolid.PHONE));
         card.add(Box.createVerticalStrut(13));
 
+        // EMAIL
+        card.add(EstiloReAlimenta.criarLabel("E-mail"));
+        card.add(Box.createVerticalStrut(5));
+        campoEmail = new JTextField();
+        card.add(EstiloReAlimenta.criarCampoTexto(campoEmail, "Digite seu e-mail", FontAwesomeSolid.ENVELOPE));
+        card.add(Box.createVerticalStrut(13));
+
         // SENHA — LOCK + EYE encapsulados em criarCampoSenha
         card.add(EstiloReAlimenta.criarLabel("Senha"));
         card.add(Box.createVerticalStrut(5));
@@ -141,6 +149,7 @@ public class TelaCadastroComerciante extends JFrame {
         String cnpj     = campoCnpj.getText().trim();
         String endereco = campoEndereco.getText().trim();
         String telefone = campoTelefone.getText().trim();
+        String email = campoEmail.getText().trim();
         String senha    = new String(campoSenha.getPassword());
         String confirma = new String(campoConfirmar.getPassword());
 
@@ -158,6 +167,9 @@ public class TelaCadastroComerciante extends JFrame {
         }
         if (telefone.isEmpty() || telefone.equals("Digite o telefone de contato")) {
             mostrarErro("O campo Telefone é obrigatório."); return;
+        }
+        if (email.isEmpty() || email.equals("Digite o email da conta")) {
+            mostrarErro("O campo E-mail é obrigatorio."); return;
         }
         if (senha.length() < 6) {
             mostrarErro("A senha deve ter pelo menos 6 caracteres."); return;
