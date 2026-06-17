@@ -2,7 +2,6 @@ package dao;
 
 import model.Alimento;
 import util.Conexao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,9 +10,7 @@ import java.sql.ResultSet;
 public class AlimentoDAO {
 
     public void inserir(Alimento alimento) {
-        String sql ="INSERT INTO Alimento" + "id, nome, categoria, validade, quantidade, descricao, imagem" +
-                "VALUES (?,?,?,?,?,?,?)";
-
+        String sql = "INSERT INTO Alimento (nome, categoria, validade, quantidade, descricao, imagem, id_comerciante) VALUES (?,?,?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)
@@ -24,7 +21,7 @@ public class AlimentoDAO {
             statement.setInt(   4, alimento.getQuantidade());
             statement.setString(5, alimento.getDescricao());
             statement.setString(6, alimento.getImagem());
-            statement.setString(7, alimento.getComerciante().getSenha());
+            statement.setInt(7, alimento.getComerciante().getId());
 
             statement.executeUpdate();
             statement.close();

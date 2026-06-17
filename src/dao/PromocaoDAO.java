@@ -1,9 +1,7 @@
 package dao;
-
 import model.Doacao;
 import  model.Promocao;
 import util.Conexao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,8 +9,7 @@ import java.sql.ResultSet;
 
 public class PromocaoDAO {
     public void inserir(Promocao promocao) {
-        String sql ="INSERT INTO Promocao" + "Alimento, Desconto, dataInicio, dataFim, obsevacoes, ativa" +
-                "VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Promocao (Alimento, Desconto, dataInicio, dataFim, obsevacoes, ativa) VALUES (?,?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)

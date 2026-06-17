@@ -22,7 +22,7 @@ public class Alimento {
         this.quantidade = quantidade;
         this.descricao = descricao;
         this.imagem = imagem;
-        this.comerciante = new Comerciante();
+        this.comerciante = comerciante;
     }
 
     public int getId() {return id;}
