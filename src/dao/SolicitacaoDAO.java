@@ -11,8 +11,7 @@ import java.sql.*;
 
 public class SolicitacaoDAO {
     public void inserir(Solicitacao solicitacao) {
-        String sql ="INSERT INTO Solicitação" + "Consumidor, Doação, Quantidade, DataSolicitacao, Status" +
-                "VALUES (?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO Solicitacao (Consumidor, Doação, Quantidade, DataSolicitacao, Status) VALUES (?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)

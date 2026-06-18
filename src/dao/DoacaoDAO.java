@@ -3,7 +3,6 @@ package dao;
 import model.Alimento;
 import model.Doacao;
 import util.Conexao;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,8 +10,7 @@ import java.sql.ResultSet;
 
 public class DoacaoDAO {
     public void inserir(Doacao doacao) {
-        String sql ="INSERT INTO Doacao" + "Alimento, Quantidade, dataLimite, horarioRetirada, obsevacoes, status" +
-                "VALUES (?,?,?,?,?,?,?)";
+        String sql ="INSERT INTO Doacao (Alimento, Quantidade, dataLimite, horarioRetirada, obsevacoes, status) VALUES (?,?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)

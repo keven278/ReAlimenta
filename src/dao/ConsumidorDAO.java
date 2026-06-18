@@ -10,10 +10,7 @@ import java.sql.SQLException;
 
 public class ConsumidorDAO {
     public void inserir(Consumidor consumidor) {
-        String sql ="INSERT INTO consumidor" + "nome, telefone, senha, cpf, emaiL" +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-
-
+        String sql = "INSERT INTO consumidor (nome, telefone, senha, cpf, emaiL) VALUES (?, ?, ?, ?, ?)";
         try(
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)
@@ -23,7 +20,6 @@ public class ConsumidorDAO {
             statement.setString(3, consumidor.getSenha());
             statement.setString(4, consumidor.getCpf());
             statement.setString(5, consumidor.getEmail());
-
             statement.executeUpdate();
 
         } catch (SQLException e) {

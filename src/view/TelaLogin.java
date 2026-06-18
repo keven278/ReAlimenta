@@ -114,12 +114,12 @@ public class TelaLogin extends JFrame {
         card.add(lblSub);
         card.add(Box.createVerticalStrut(24));
 
-        // CPF / CNPJ — ícone via Ikonli
-        card.add(EstiloReAlimenta.criarLabel("CPF ou CNPJ"));
+        // Login — ícone via Ikonli
+        card.add(EstiloReAlimenta.criarLabel("Login"));
         card.add(Box.createVerticalStrut(5));
         campoCpfCnpj = new JTextField();
         card.add(EstiloReAlimenta.criarCampoTexto(
-                campoCpfCnpj, "Digite seu CPF ou CNPJ", FontAwesomeSolid.USER));
+                campoCpfCnpj, "Digite seu E-mail", FontAwesomeSolid.USER));
         card.add(Box.createVerticalStrut(14));
 
         // SENHA — ícone LOCK + olho já encapsulados em criarCampoSenha
