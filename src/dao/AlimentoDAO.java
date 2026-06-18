@@ -10,23 +10,24 @@ import java.util.ArrayList;
 
 public class AlimentoDAO {
 
-    public void inserir(Alimento alimento) {
-        String sql = "INSERT INTO Alimento (nome, categoria, validade, quantidade, descricao, imagem, id_comerciante) VALUES (?,?,?,?,?,?,?)";
+    public void inserirAlimento(Alimento alimento) {
+        String sql = "INSERT INTO Alimento (nome_alimento, categoria, validade,marca,imagem_alimento,promocao, quantidade, descricao,  id_comerciante) VALUES (?,?,?,?,?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)
         ){
-            statement.setString(1, alimento.getNome());
+            statement.setString(1, alimento.getNomeAlimento());
             statement.setString(2, alimento.getCategoria());
-            statement.setString(3, alimento.getValidade().toString());
-            statement.setInt(   4, alimento.getQuantidade());
-            statement.setString(5, alimento.getDescricao());
-            statement.setString(6, alimento.getImagem());
-            statement.setInt(7, alimento.getComerciante().getId());
+            statement.setDate(3,java.sql.Date.valueOf(alimento.getValidade()));
+            statement.setString(4, alimento.getMarca());
+            statement.setString(5, alimento.getImagemAlimento());
+            statement.setBoolean(6, alimento.isPromocao());
+            statement.setInt   (7, alimento.getQuantidade());
+            statement.setString(8, alimento.getDescricao());
+            
+            statement.setInt(9, alimento.getComerciante().getId());
 
             statement.executeUpdate();
-            statement.close();
-            conn.close();
 
             System.out.println("Alimento inserido com sucesso");
 

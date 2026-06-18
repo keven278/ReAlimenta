@@ -1,30 +1,66 @@
 package model;
-import java.time.LocalDate;
 
 public class Doacao {
-    private int id;
-    private Alimento alimento;
-    private int quantidade;
-    private LocalDate dataLimite;
-    private String horarioRetirada;
-    private String observacoes;
-    private String status;
+
+    private int id_doacao;
+    private Solicitacao solicitacao;
+    private Consumidor consumidor;
+    private Comerciante comerciante;
+    private int quantidade_doacao;
 
     public Doacao() {
     }
 
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
-    public Alimento getAlimento() {return alimento;}
-    public void setAlimento(Alimento alimento) {this.alimento = alimento;}
-    public int getQuantidade() {return  quantidade;}
-    public void setQuantidade(int quantidade) {this.quantidade = quantidade;}
-    public LocalDate getDataLimite() {return dataLimite;}
-    public void setDataLimite(LocalDate dataLimite) {this.dataLimite = dataLimite;}
-    public String getHorarioRetirada() {return horarioRetirada;}
-    public void setHorarioRetirada(String horarioRetirada) {this.horarioRetirada = horarioRetirada;}
-    public String getObservacoes() {return observacoes;}
-    public void setObservacoes(String observacoes) {this.observacoes = observacoes;}
-    public String getStatus() {return status;}
-    public void setStatus(String status) {this.status = status;}
+    public Doacao(int id_doacao,
+                  Solicitacao solicitacao,
+                  Consumidor consumidor,
+                  Comerciante comerciante,
+                  int quantidade_doacao) {
+
+        this.id_doacao = id_doacao;
+        this.solicitacao = solicitacao;
+        this.consumidor = consumidor;
+        this.comerciante = comerciante;
+        this.quantidade_doacao = quantidade_doacao;
+    }
+
+    public int getIdDoacao() {
+        return id_doacao;
+    }
+
+    public void setIdDoacao(int id_doacao) {
+        this.id_doacao = id_doacao;
+    }
+
+    public Solicitacao getSolicitacao() {
+        return solicitacao;
+    }
+
+    public void setSolicitacao(Solicitacao solicitacao) {
+        this.solicitacao = solicitacao;
+    }
+
+    public Consumidor getConsumidor() {
+        return consumidor;
+    }
+
+    public void setConsumidor(Consumidor consumidor) {
+        this.consumidor = consumidor;
+    }
+
+    public Comerciante getComerciante() {
+        return comerciante;
+    }
+
+    public void setComerciante(Comerciante comerciante) {
+        this.comerciante = comerciante;
+    }
+
+    public int getQuantidadeDoacao() {
+        return quantidade_doacao;
+    }
+
+    public void setQuantidadeDoacao(int quantidade_doacao) {
+        this.quantidade_doacao = quantidade_doacao;
+    }
 }

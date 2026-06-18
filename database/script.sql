@@ -1,29 +1,26 @@
 drop database if exists realimenta;
 create database realimenta;
-
-drop database if exists realimenta;
-create database realimenta;
 use realimenta;
 
 create table usuario(
     id_usuario int auto_increment primary key,
     senha varchar(255) not null,
     nome varchar(100) not null,
-    telefone varchar(20),
+    telefone int(20),
     email varchar(100) unique
 );
 
 create table consumidor(
     id_consumidor int auto_increment primary key,
     id_usuario int not null unique,
-    cpf varchar(20) unique,
+    cpf int(20) unique,
     foreign key (id_usuario) references usuario(id_usuario)
 );
 
 create table comerciante (
     id_comerciante int auto_increment primary key,
     id_usuario int not null unique,
-    cnpj varchar(20) unique,
+    cnpj int(20) unique,
     endereco varchar(100),
     nome_comercio varchar(100),
     foreign key (id_usuario) references usuario(id_usuario)
@@ -31,7 +28,7 @@ create table comerciante (
 
 create table alimento (
   id_alimento int auto_increment primary key,
-  nome varchar (100) not null,
+  nome_alimento varchar (100) not null,
   categoria varchar (100),
   validade date,
   marca varchar (100),
@@ -42,7 +39,7 @@ create table alimento (
   id_comerciante int,
   foreign key (id_comerciante) references comerciante(id_comerciante)
 );
-
+ 
 create table promocao(
    id_promocao int auto_increment primary key,
    id_alimento int,
@@ -77,7 +74,7 @@ create table doacao (
     foreign key (id_consumidor) references  consumidor(id_consumidor),
     foreign key(id_comerciante) references  comerciante(id_comerciante)
 );
-
+-- comentario
 create table notificacao (
     id_notificacao int auto_increment primary key,
     id_consumidor int,
