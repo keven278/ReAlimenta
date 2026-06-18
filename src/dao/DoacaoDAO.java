@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 
 public class DoacaoDAO {
-    public void inserir(Doacao doacao) {
+    /*public void inserir(Doacao doacao) {
         String sql ="INSERT INTO Doacao (Alimento, Quantidade, dataLimite, horarioRetirada, obsevacoes, status) VALUES (?,?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
@@ -30,7 +30,7 @@ public class DoacaoDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao cadastrar Doacao");
         }
-    }
+    }*/
 }
 
 

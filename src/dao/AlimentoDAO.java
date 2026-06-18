@@ -16,16 +16,16 @@ public class AlimentoDAO {
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)
         ){
-            statement.setString(1, alimento.getNomeAlimento());
-            statement.setString(2, alimento.getCategoria());
-            statement.setDate(3,java.sql.Date.valueOf(alimento.getValidade()));
-            statement.setString(4, alimento.getMarca());
-            statement.setString(5, alimento.getImagemAlimento());
+            statement.setString (1, alimento.getNomeAlimento());
+            statement.setString (2, alimento.getCategoria());
+            statement.setDate   (3,java.sql.Date.valueOf(alimento.getValidade()));
+            statement.setString (4, alimento.getMarca());
+            statement.setString (5, alimento.getImagemAlimento());
             statement.setBoolean(6, alimento.isPromocao());
-            statement.setInt   (7, alimento.getQuantidade());
-            statement.setString(8, alimento.getDescricao());
+            statement.setInt    (7, alimento.getQuantidade());
+            statement.setString (8, alimento.getDescricao());
             
-            statement.setInt(9, alimento.getComerciante().getId());
+            statement.setInt    (9, alimento.getComerciante().getIdComerciante());
 
             statement.executeUpdate();
 
