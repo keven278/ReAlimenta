@@ -37,13 +37,6 @@ public class AlimentoDAO {
             System.out.println("Erro ao inserir alimento");
         }
     }
-    public ArrayList<Alimento> listar()
-        ArrayList<Alimento> alimentos = new ArrayList<>();
-
-        String SQL = "SELECT * FROM Alimento";
-
-        try()
-
 
 
     }

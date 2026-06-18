@@ -14,7 +14,7 @@ public class Alimento {
 
     public Alimento() {
     }
-    public Alimento(int id, String nome, String categoria, LocalDate validade, int quantidade, String descricao, String imagem,  Comerciante comerciante) {
+    public Alimento(int id, String nome, String categoria, LocalDate validade, int quantidade, String descricao, String imagem,  Comerciante comerciant) {
         this.id = id;
         this.nome = nome;
         this.categoria = categoria;
