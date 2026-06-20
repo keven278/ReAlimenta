@@ -5,7 +5,8 @@ import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import dao.ConsumidorDAO;
+import model.Consumidor;
 public class TelaCadastroConsumidor extends JFrame {
     private final JFrame   telaPai;
     private JTextField     campoNome;
@@ -169,9 +170,24 @@ public class TelaCadastroConsumidor extends JFrame {
             mostrarErro("As senhas não coincidem."); return;
         }
 
+        Consumidor consumidor = new Consumidor(
+                0,
+                0,
+                nome,
+                telefone,
+                email,
+                senha,
+                cpf
+        );
+
+        ConsumidorDAO consumidorDAO = new ConsumidorDAO();
+        consumidorDAO.inserirConsumidor(consumidor);
+
         JOptionPane.showMessageDialog(this,
-                "Consumidor cadastrado com sucesso!\n(Integração com banco de dados pendente)",
-                "Cadastro Realizado", JOptionPane.INFORMATION_MESSAGE);
+                "Consumidor cadastrado com sucesso!",
+                "Cadastro Realizado",
+                JOptionPane.INFORMATION_MESSAGE);
+
         voltarLogin();
     }
 

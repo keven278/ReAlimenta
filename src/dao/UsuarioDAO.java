@@ -48,11 +48,6 @@ public class UsuarioDAO {
 
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sqlUsuario)) {
-
-            System.out.println("Email: " + email); // teste de email
-            System.out.println("Senha: " + senha); // teste de senha
-
-
             stmt.setString(1, email);
             stmt.setString(2, senha);
 
