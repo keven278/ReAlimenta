@@ -8,8 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+
 public class PromocaoDAO {
-    /*public void inserir(Promocao promocao) {
+    public void inserir(Promocao promocao) {
         String sql = "INSERT INTO Promocao (Alimento, Desconto, dataInicio, dataFim, obsevacoes, ativa) VALUES (?,?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
@@ -30,7 +31,7 @@ public class PromocaoDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao cadastrar promoção");
         }
-    }*/
+    }
 }
 
 
