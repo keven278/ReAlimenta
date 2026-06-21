@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
+import model.Comerciante;
 
 public class TelaMinhasPromocoes extends JFrame {
     private static final String[] FILTRO_CATEGORIAS = {
@@ -23,7 +24,9 @@ public class TelaMinhasPromocoes extends JFrame {
     private JComboBox<String> campoFiltro;
     private JPanel painelLista;
 
-    public TelaMinhasPromocoes() {
+    private Comerciante comerciante;
+    public TelaMinhasPromocoes(Comerciante comerciante) {
+        this.comerciante = comerciante;
         popularMocks();
         listaFiltrada.addAll(listaPromocoes);
         configurarJanela();
@@ -161,7 +164,7 @@ public class TelaMinhasPromocoes extends JFrame {
         painelPrincipal.add(Box.createVerticalStrut(20));
 
         // BOTÃO NOVA PROMOÇÃO
-        JButton btnNova = EstiloReAlimenta.criarBotaoPrimario("+ Nova Promoção", e -> { dispose(); new TelaNovaPromocao(); });
+        JButton btnNova = EstiloReAlimenta.criarBotaoPrimario("+ Nova Promoção", e -> { dispose(); new TelaNovaPromocao(comerciante); });
         btnNova.setPreferredSize(new Dimension(220, 46));
         JPanel painelBotao = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         painelBotao.setOpaque(false);
@@ -357,12 +360,12 @@ public class TelaMinhasPromocoes extends JFrame {
     }
 
     // Navegação
-    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(); }
-    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(); }
-    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(); }
-    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(); }
-    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(); }
-    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(); }
+    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(comerciante); }
+    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(comerciante); }
+    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(comerciante); }
+    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(comerciante); }
+    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(comerciante); }
+    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(comerciante); }
     private void sair()                { dispose(); new TelaLogin(); }
 
 }

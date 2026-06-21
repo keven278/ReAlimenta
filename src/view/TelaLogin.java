@@ -1,4 +1,8 @@
 package view;
+import dao.UsuarioDAO;
+import model.Comerciante;
+import model.Consumidor;
+import model.Usuario;
 import util.EstiloReAlimenta;
 import util.EstiloReAlimenta.RoundedPanel;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
@@ -7,7 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class TelaLogin extends JFrame {
-    private JTextField     campoCpfCnpj;
+    private JTextField     campoEmail;
     private JPasswordField campoSenha;
     private JCheckBox      checkLembrar;
 
@@ -117,9 +121,9 @@ public class TelaLogin extends JFrame {
         // Login — ícone via Ikonli
         card.add(EstiloReAlimenta.criarLabel("Login"));
         card.add(Box.createVerticalStrut(5));
-        campoCpfCnpj = new JTextField();
+        campoEmail = new JTextField();
         card.add(EstiloReAlimenta.criarCampoTexto(
-                campoCpfCnpj, "Digite seu E-mail", FontAwesomeSolid.USER));
+                campoEmail, "Digite seu E-mail", FontAwesomeSolid.USER));
         card.add(Box.createVerticalStrut(14));
 
         // SENHA — ícone LOCK + olho já encapsulados em criarCampoSenha
@@ -158,18 +162,41 @@ public class TelaLogin extends JFrame {
 
     // AÇÕES
     private void realizarLogin() {
-        String cpfCnpj = campoCpfCnpj.getText().trim();
-        String senha   = new String(campoSenha.getPassword()).trim();
+        String email = campoEmail.getText().trim();
+        String senha = new String(campoSenha.getPassword()).trim();
 
-        if (cpfCnpj.isEmpty() || cpfCnpj.equals("Digite seu CPF ou CNPJ") || senha.isEmpty()) {
+        if (email.isEmpty() || senha.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Preencha o CPF/CNPJ e a senha para continuar.",
-                    "Campos obrigatórios", JOptionPane.WARNING_MESSAGE);
+                    "Preencha o e-mail e a senha para continuar.",
+                    "Campos obrigatórios",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuario usuario = usuarioDAO.login(email, senha);
+
+        if (usuario == null) {
+            JOptionPane.showMessageDialog(this,
+                    "E-mail ou senha inválidos.",
+                    "Erro ao entrar",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         JOptionPane.showMessageDialog(this,
-                "Login realizado com sucesso!\n(Integração com backend pendente)",
-                "Bem-vindo(a)!", JOptionPane.INFORMATION_MESSAGE);
+                "Login realizado com sucesso!",
+                "Bem-vindo(a)!",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        if (usuario instanceof Consumidor) {
+            new TelaDashboardConsumidor(usuario.getNome());
+            dispose();
+
+        } else if (usuario instanceof Comerciante) {
+            new TelaDashboardComerciante((Comerciante) usuario);
+            dispose();
+        }
     }
 
     private void abrirTelaCadastroConsumidor() {

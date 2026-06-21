@@ -7,7 +7,6 @@ public class Alimento {
     private String nome_alimento;
     private String categoria;
     private LocalDate validade;
-    private String marca;
     private String imagem_alimento;
     private boolean promocao;
     private int quantidade;
@@ -17,14 +16,12 @@ public class Alimento {
 
     public Alimento() {
     }
-    public Alimento(int id_alimento, String nome_alimento, String categoria, LocalDate validade,
-        String marca,String imagem_alimento,boolean promocao , int quantidade, String descricao,
+    public Alimento(int id_alimento, String nome_alimento, String categoria, LocalDate validade,String imagem_alimento,boolean promocao , int quantidade, String descricao,
          Comerciante comerciante) {
         this.id_alimento = id_alimento;
         this.nome_alimento = nome_alimento;
         this.categoria = categoria;
         this.validade = validade;
-        this.marca=marca;
         this.imagem_alimento = imagem_alimento;
         this.promocao = promocao;
         this.quantidade = quantidade;
@@ -56,13 +53,6 @@ public class Alimento {
     public void setValidade(LocalDate validade){
     this.validade = validade;
     }
-    public String getMarca() {
-    return marca;
-}
-
-public void setMarca(String marca) {
-    this.marca = marca;
-}
 
 public String getImagemAlimento() {
     return imagem_alimento;

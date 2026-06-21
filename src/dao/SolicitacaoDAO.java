@@ -10,7 +10,7 @@ import java.sql.*;
 
 
 public class SolicitacaoDAO {
-    public void inserir(Solicitacao solicitacao) {
+/*public void inserir(Solicitacao solicitacao) {
         String sql = "INSERT INTO Solicitacao (Consumidor, Doação, Quantidade, DataSolicitacao, Status) VALUES (?,?,?,?,?)";
         try(
                 Connection conn = Conexao.getConnection();
@@ -75,9 +75,8 @@ public class SolicitacaoDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao atualizar: " + e.getMessage());
         }
+
     }
-
-
     public void excluir(int id) {
         String sql = "DELETE FROM Solicitacao WHERE id = ?";
         try (
@@ -91,9 +90,13 @@ public class SolicitacaoDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao excluir: " + e.getMessage());
         }
-    }
-
+     */
 }
+
+
+
+
+
 
 
 
