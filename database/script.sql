@@ -31,7 +31,6 @@ create table alimento (
                           nome_alimento varchar (100) not null,
                           categoria varchar (100),
                           validade date,
-                          marca varchar (100),
                           imagem_alimento varchar (100),
                           promocao boolean default false,
                           quantidade int,
@@ -82,4 +81,3 @@ create table notificacao (
                              data_notificacao date,
                              foreign key (id_consumidor) references consumidor(id_consumidor)
 );
-
