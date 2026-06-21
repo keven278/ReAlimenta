@@ -1,7 +1,6 @@
 package controller;
 
 import dao.SolicitacaoDAO;
-import model.Alimento;
 import model.Consumidor;
 import model.Solicitacao;
 
