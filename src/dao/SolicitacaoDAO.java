@@ -46,7 +46,7 @@ public class SolicitacaoDAO {
             if (rs.next()) {
                 Solicitacao solicitacao = new Solicitacao();
                 solicitacao.setIdSolicitacao(rs.getInt("id"));
-                solicitacao.setConsumidor(consumidor); // já temos o objeto
+                solicitacao.setConsumidor(consumidor);
                 solicitacao.setQuantidade(rs.getInt("quantidade"));
                 solicitacao.setDataSolicitacao(rs.getTimestamp("dataSolicitacao").toLocalDateTime());
                 solicitacao.setStatus(rs.getString("status"));
