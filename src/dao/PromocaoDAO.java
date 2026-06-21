@@ -1,12 +1,11 @@
 package dao;
 
-import model.Doacao;
-import  model.Promocao;
+import model.Promocao;
 import util.Conexao;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.ResultSet;
 
 
 public class PromocaoDAO {
@@ -16,11 +15,11 @@ public class PromocaoDAO {
                 Connection conn = Conexao.getConnection();
                 PreparedStatement statement = conn.prepareStatement(sql)
         ){
-            statement.setInt(1, promocao.getAlimento().getId());
-            statement.setDouble(2, promocao.getDesconto());
-            statement.setString(3, promocao.getDataInicio().toString());
-            statement.setString(4, promocao.getDataFim().toString());
-            statement.setBoolean(5, promocao.isAtiva());
+            statement.setInt(1, promocao.getAlimento().getIdAlimento());
+            statement.setDouble(2, promocao.getIdPromocao());
+            statement.setString(3, promocao.getInicioPromocao().toString());
+            statement.setString(4, promocao.getFimPromocao().toString());
+            statement.setBoolean(5, promocao.getAlimento().isPromocao());
 
             statement.executeUpdate();
             statement.close();
