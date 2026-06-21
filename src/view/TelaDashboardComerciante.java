@@ -1,4 +1,5 @@
 package view;
+import model.Comerciante;
 import util.EstiloReAlimenta;
 import util.EstiloReAlimenta.RoundedPanel;
 import javax.swing.*;
@@ -15,11 +16,14 @@ public class TelaDashboardComerciante extends JFrame {
     private int totalPromocoes    = 4;
     private int totalDoacoes      = 3;
     private int totalSolicitacoes = 7;
+    private Comerciante comerciante;
 
     private List<AlimentoValidade>    proximosValidade    = new ArrayList<AlimentoValidade>();
     private List<SolicitacaoRecente>  solicitacoesRecentes = new ArrayList<SolicitacaoRecente>();
 
-    public TelaDashboardComerciante() {
+    public TelaDashboardComerciante(Comerciante comerciante) {
+        this.comerciante = comerciante;
+
         popularMocks();
         configurarJanela();
         construirLayout();
@@ -220,8 +224,8 @@ public class TelaDashboardComerciante extends JFrame {
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         botoes.setOpaque(false);
 
-        botoes.add(criarBotaoAtalho(FontAwesomeSolid.PLUS_CIRCLE, "Cadastrar Alimento", e -> new TelaCadastroAlimento()));
-        botoes.add(criarBotaoAtalho(FontAwesomeSolid.TAG, "Nova Promoção", e -> new TelaNovaPromocao()));
+        botoes.add(criarBotaoAtalho(FontAwesomeSolid.PLUS_CIRCLE, "Cadastrar Alimento", e -> new TelaCadastroAlimento(comerciante)));
+        botoes.add(criarBotaoAtalho(FontAwesomeSolid.TAG, "Nova Promoção", e -> new TelaNovaPromocao(comerciante)));
         botoes.add(criarBotaoAtalho(FontAwesomeSolid.HAND_HOLDING_HEART, "Nova Doação", e -> { dispose(); new TelaNovaDoacao(); }));
         secao.add(botoes);
         return secao;
@@ -429,15 +433,12 @@ public class TelaDashboardComerciante extends JFrame {
     }
 
     // Navegação
-    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(); }
-    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(); }
-    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(); }
-    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(); }
-    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(); }
-    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(); }
+    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(comerciante); }
+    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(comerciante); }
+    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(comerciante); }
+    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(comerciante); }
+    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(comerciante); }
+    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(comerciante); }
     private void sair()                { dispose(); new TelaLogin(); }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(TelaDashboardComerciante::new);
-    }
 }

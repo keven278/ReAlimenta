@@ -194,7 +194,7 @@ public class TelaLogin extends JFrame {
             dispose();
 
         } else if (usuario instanceof Comerciante) {
-            new TelaDashboardComerciante();
+            new TelaDashboardComerciante((Comerciante) usuario);
             dispose();
         }
     }

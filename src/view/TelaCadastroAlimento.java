@@ -1,4 +1,5 @@
 package view;
+import model.Comerciante;
 import util.EstiloReAlimenta;
 import util.EstiloReAlimenta.RoundedPanel;
 import javax.swing.*;
@@ -9,6 +10,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
+
+import dao.AlimentoDAO;
+import model.Alimento;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class TelaCadastroAlimento extends JFrame {
 
@@ -30,7 +36,11 @@ public class TelaCadastroAlimento extends JFrame {
     private File          arquivoImagem;
     private JLabel        labelCaminhoImagem;
 
-    public TelaCadastroAlimento() {
+    private Comerciante comerciante;
+
+    public TelaCadastroAlimento(Comerciante comerciante) {
+        this.comerciante = comerciante;
+
         configurarJanela();
         construirLayout();
         setVisible(true);
@@ -339,9 +349,8 @@ public class TelaCadastroAlimento extends JFrame {
     }
 
     private void salvarAlimento() {
-        // Validação básica — lógica de integração com DAO aqui no futuro
         String nome = campoNome.getText().trim();
-        String validade = campoValidade.getText().trim();
+        String validadeTexto = campoValidade.getText().trim();
         String categoria = (String) campoCategoria.getSelectedItem();
         int quantidade = (Integer) campoQuantidade.getValue();
         String descricao = campoDescricao.getText().trim();
@@ -350,27 +359,64 @@ public class TelaCadastroAlimento extends JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, informe o nome do alimento.", "Campo obrigatório", JOptionPane.WARNING_MESSAGE);
             return;
         }
+
         if ("Selecionar categoria...".equals(categoria)) {
             JOptionPane.showMessageDialog(this, "Por favor, selecione uma categoria.", "Campo obrigatório", JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (validade.isEmpty() || validade.equals("DD/MM/AAAA")) {
+
+        if (validadeTexto.isEmpty() || validadeTexto.equals("DD/MM/AAAA")) {
             JOptionPane.showMessageDialog(this, "Por favor, informe a data de validade.", "Campo obrigatório", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // TODO: AlimentoDAO.salvar(new Alimento(nome, categoria, validade, quantidade, descricao, arquivoImagem))
-        JOptionPane.showMessageDialog(this, "Alimento \"" + nome + "\" salvo com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        LocalDate validade;
+
+        try {
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            validade = LocalDate.parse(validadeTexto, formato);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Data inválida. Use o formato DD/MM/AAAA.", "Data inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String caminhoImagem = null;
+
+        if (arquivoImagem != null) {
+            caminhoImagem = arquivoImagem.getAbsolutePath();
+        }
+
+        Alimento alimento = new Alimento(
+                0,
+                nome,
+                categoria,
+                validade,
+                caminhoImagem,
+                false,
+                quantidade,
+                descricao,
+                comerciante
+        );
+
+        AlimentoDAO alimentoDAO = new AlimentoDAO();
+        alimentoDAO.inserirAlimento(alimento);
+
+        JOptionPane.showMessageDialog(this,
+                "Alimento \"" + nome + "\" cadastrado com sucesso!",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE);
+
         dispose();
+        new TelaDashboardComerciante(comerciante);
     }
 
     // Navegação
-    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(); }
-    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(); }
-    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(); }
-    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(); }
-    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(); }
-    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(); }
+    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(comerciante); }
+    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(comerciante); }
+    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(comerciante); }
+    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(comerciante); }
+    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(comerciante); }
+    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(comerciante); }
     private void sair()                { dispose(); new TelaLogin(); }
 
 }

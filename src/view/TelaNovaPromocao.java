@@ -1,4 +1,5 @@
 package view;
+import model.Comerciante;
 import util.EstiloReAlimenta;
 import util.EstiloReAlimenta.RoundedPanel;
 import javax.swing.*;
@@ -29,7 +30,9 @@ public class TelaNovaPromocao extends JFrame {
     private JTextArea            campoObservacoes;
 
     // Construtor
-    public TelaNovaPromocao() {
+    private Comerciante comerciante;
+    public TelaNovaPromocao(Comerciante comerciante) {
+        this.comerciante = comerciante;
         configurarJanela();
         construirLayout();
         setVisible(true);
@@ -444,12 +447,12 @@ public class TelaNovaPromocao extends JFrame {
     }
 
     // Navegação
-    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(); }
-    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(); }
-    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(); }
-    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(); }
-    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(); }
-    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(); }
+    private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(comerciante); }
+    private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(comerciante); }
+    private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(comerciante); }
+    private void navegarDoacoes()      { dispose(); new TelaDoacoesComerciante(comerciante); }
+    private void navegarSolicitacoes() { dispose(); new TelaSolicitacoesComerciante(comerciante); }
+    private void navegarNotificacoes() { dispose(); new TelaNotificacoesComerciante(comerciante); }
     private void sair()                { dispose(); new TelaLogin(); }
 
 }
