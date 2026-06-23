@@ -226,7 +226,7 @@ public class TelaDashboardComerciante extends JFrame {
 
         botoes.add(criarBotaoAtalho(FontAwesomeSolid.PLUS_CIRCLE, "Cadastrar Alimento", e -> new TelaCadastroAlimento(comerciante)));
         botoes.add(criarBotaoAtalho(FontAwesomeSolid.TAG, "Nova Promoção", e -> new TelaNovaPromocao(comerciante)));
-        botoes.add(criarBotaoAtalho(FontAwesomeSolid.HAND_HOLDING_HEART, "Nova Doação", e -> { dispose(); new TelaNovaDoacao(); }));
+        botoes.add(criarBotaoAtalho(FontAwesomeSolid.HAND_HOLDING_HEART, "Nova Doação", e -> { dispose(); new TelaNovaDoacao(comerciante); }));
         secao.add(botoes);
         return secao;
     }

@@ -9,21 +9,18 @@ import java.awt.*;
 import java.text.ParseException;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
+import controller.PromocaoController;
+import dao.AlimentoDAO;
+import model.Alimento;
+import model.Promocao;
 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.util.List;
 public class TelaNovaPromocao extends JFrame {
-    // Mock de alimentos — substituir por AlimentoDAO.listarTodos()
-    private static final String[] ALIMENTOS_MOCK = {
-            "Selecionar alimento...",
-            "Pão de Forma Integral",
-            "Iogurte Natural",
-            "Leite Integral 1L",
-            "Maçã Gala",
-            "Peito de Frango",
-            "Arroz Parboilizado 5kg"
-    };
 
     // Campos do formulário
-    private JComboBox<String>    campoAlimento;
+    private JComboBox<Alimento> campoAlimento;
     private JTextField           campoDesconto;
     private JFormattedTextField  campoDataInicio;
     private JFormattedTextField  campoDataFim;
@@ -35,6 +32,7 @@ public class TelaNovaPromocao extends JFrame {
         this.comerciante = comerciante;
         configurarJanela();
         construirLayout();
+        carregarAlimentos();
         setVisible(true);
     }
 
@@ -220,7 +218,8 @@ public class TelaNovaPromocao extends JFrame {
         // — Alimento (ComboBox) —
         card.add(criarLabelObrigatorio("Alimento"));
         card.add(Box.createVerticalStrut(6));
-        campoAlimento = new JComboBox<String>(ALIMENTOS_MOCK);
+        campoAlimento = new JComboBox<>();
+        carregarAlimentos();
         campoAlimento.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         campoAlimento.setBackground(EstiloReAlimenta.BRANCO);
         campoAlimento.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
@@ -394,54 +393,82 @@ public class TelaNovaPromocao extends JFrame {
 
     // Lógica de salvamento — preparada para DAO
     private void salvarPromocao() {
-        // Validação básica dos campos obrigatórios
-        String alimento  = (String) campoAlimento.getSelectedItem();
-        String desconto  = campoDesconto.getText().trim();
-        String dataInicio = campoDataInicio.getText().trim();
-        String dataFim    = campoDataFim.getText().trim();
 
-        if (alimento == null || alimento.equals("Selecionar alimento...")) {
-            mostrarErro("Selecione um alimento para a promoção.");
+        Alimento alimento = (Alimento) campoAlimento.getSelectedItem();
+
+        String descontoTexto = campoDesconto.getText().trim();
+        String dataInicioTexto = campoDataInicio.getText().trim();
+        String dataFimTexto = campoDataFim.getText().trim();
+
+        if (alimento == null) {
+            mostrarErro("Selecione um alimento.");
             return;
         }
-        if (desconto.isEmpty()) {
-            mostrarErro("Informe o percentual de desconto.");
-            return;
-        }
+
+        int desconto;
+
         try {
-            int pct = Integer.parseInt(desconto);
-            if (pct <= 0 || pct > 100) throw new NumberFormatException();
-        } catch (NumberFormatException ex) {
-            mostrarErro("O desconto deve ser um número inteiro entre 1 e 100.");
-            return;
-        }
-        if (dataInicio.contains("_") || dataInicio.isEmpty()) {
-            mostrarErro("Informe a data de início no formato DD/MM/AAAA.");
-            return;
-        }
-        if (dataFim.contains("_") || dataFim.isEmpty()) {
-            mostrarErro("Informe a data de fim no formato DD/MM/AAAA.");
+            desconto = Integer.parseInt(descontoTexto);
+
+            if (desconto < 1 || desconto > 100) {
+                mostrarErro("O desconto deve estar entre 1 e 100.");
+                return;
+            }
+
+        } catch (NumberFormatException e) {
+            mostrarErro("Informe um desconto válido.");
             return;
         }
 
-        String observacoes = campoObservacoes.getText().trim();
-        if (observacoes.equals("Informações adicionais sobre a promoção...")) {
-            observacoes = "";
+        LocalDate inicio;
+        LocalDate fim;
+
+        try {
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            inicio = LocalDate.parse(dataInicioTexto, formato);
+            fim = LocalDate.parse(dataFimTexto, formato);
+
+        } catch (Exception e) {
+            mostrarErro("Datas inválidas.");
+            return;
         }
 
-        // TODO: criar objeto Promocao e persistir via PromocaoDAO
-        // Promocao promocao = new Promocao();
-        // promocao.setAlimentoId(AlimentoDAO.buscarIdPorNome(alimento));
-        // promocao.setDesconto(Integer.parseInt(desconto));
-        // promocao.setDataInicio(DateUtil.parse(dataInicio));
-        // promocao.setDataFim(DateUtil.parse(dataFim));
-        // promocao.setObservacoes(observacoes);
-        // PromocaoDAO.salvar(promocao);
+        if (fim.isBefore(inicio)) {
+            mostrarErro("A data final não pode ser menor que a inicial.");
+            return;
+        }
 
-        JOptionPane.showMessageDialog(this, "Promoção cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        Promocao promocao = new Promocao(
+                0,
+                alimento,
+                inicio,
+                fim,
+                desconto
+        );
+
+        PromocaoController controller = new PromocaoController();
+        controller.cadastrarPromocao(promocao);
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Promoção cadastrada com sucesso!"
+        );
+
         navegarPromocoes();
     }
+    private void carregarAlimentos() {
+        campoAlimento.removeAllItems();
 
+        AlimentoDAO alimentoDAO = new AlimentoDAO();
+        List<Alimento> alimentos = alimentoDAO.listarPorComerciante(
+                comerciante.getIdComerciante()
+        );
+
+        for (Alimento alimento : alimentos) {
+            campoAlimento.addItem(alimento);
+        }
+    }
     private void mostrarErro(String mensagem) {
         JOptionPane.showMessageDialog(this, mensagem, "Campo obrigatório", JOptionPane.WARNING_MESSAGE);
     }

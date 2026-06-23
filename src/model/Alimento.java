@@ -9,6 +9,7 @@ public class Alimento {
     private LocalDate validade;
     private String imagem_alimento;
     private boolean promocao;
+    private double valor;
     private int quantidade;
     private String descricao;
     
@@ -16,7 +17,7 @@ public class Alimento {
 
     public Alimento() {
     }
-    public Alimento(int id_alimento, String nome_alimento, String categoria, LocalDate validade,String imagem_alimento,boolean promocao , int quantidade, String descricao,
+    public Alimento(int id_alimento, String nome_alimento, String categoria, LocalDate validade,String imagem_alimento,boolean promocao ,double valor, int quantidade, String descricao,
          Comerciante comerciante) {
         this.id_alimento = id_alimento;
         this.nome_alimento = nome_alimento;
@@ -24,6 +25,7 @@ public class Alimento {
         this.validade = validade;
         this.imagem_alimento = imagem_alimento;
         this.promocao = promocao;
+        this.valor = valor;
         this.quantidade = quantidade;
         this.descricao = descricao;
         
@@ -74,6 +76,14 @@ public int getQuantidade() {
     return quantidade;
 }
 
+public double getValor() {
+        return valor;
+}
+
+public void setValor(double valor) {
+    this.valor = valor;
+}
+
 public void setQuantidade(int quantidade) {
     this.quantidade = quantidade;
 }
@@ -93,4 +103,9 @@ public Comerciante getComerciante() {
 public void setComerciante(Comerciante comerciante) {
     this.comerciante = comerciante;
 }
+
+    @Override
+    public String toString() {
+        return nome_alimento;
+    }
 }

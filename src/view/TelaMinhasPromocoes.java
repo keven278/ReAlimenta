@@ -11,6 +11,9 @@ import java.util.List;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeSolid;
 import org.kordamp.ikonli.swing.FontIcon;
 import model.Comerciante;
+import controller.PromocaoController;
+import model.Promocao;
+import java.time.LocalDate;
 
 public class TelaMinhasPromocoes extends JFrame {
     private static final String[] FILTRO_CATEGORIAS = {
@@ -27,8 +30,9 @@ public class TelaMinhasPromocoes extends JFrame {
     private Comerciante comerciante;
     public TelaMinhasPromocoes(Comerciante comerciante) {
         this.comerciante = comerciante;
-        popularMocks();
-        listaFiltrada.addAll(listaPromocoes);
+
+        carregarPromocoes();
+
         configurarJanela();
         construirLayout();
         setVisible(true);
@@ -128,7 +132,8 @@ public class TelaMinhasPromocoes extends JFrame {
 
         conteudo.add(criarCabecalhoPagina());
         conteudo.add(Box.createVerticalStrut(24));
-        conteudo.add(criarBarraFiltros());
+        JPanel barraFiltros = criarBarraFiltros();
+        conteudo.add(barraFiltros);
         conteudo.add(Box.createVerticalStrut(20));
 
         // Cabeçalho da tabela
@@ -175,27 +180,40 @@ public class TelaMinhasPromocoes extends JFrame {
     }
 
     private JPanel criarBarraFiltros() {
-        JPanel barra = new JPanel(new BorderLayout(12, 0));
+        JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         barra.setOpaque(false);
+        barra.setAlignmentX(Component.LEFT_ALIGNMENT);
+        barra.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        barra.setPreferredSize(new Dimension(800, 50));
 
-        // Busca
         campoBusca = new JTextField();
-        JPanel wrapperBusca = EstiloReAlimenta.criarCampoTexto(campoBusca, "Buscar promoção...", FontAwesomeSolid.SEARCH);
-        wrapperBusca.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-        barra.add(wrapperBusca, BorderLayout.CENTER);
+        JPanel wrapperBusca = EstiloReAlimenta.criarCampoTexto(
+                campoBusca,
+                "Buscar promoção...",
+                FontAwesomeSolid.SEARCH
+        );
 
-        // Filtro categoria
+        wrapperBusca.setPreferredSize(new Dimension(400, 44));
+        wrapperBusca.setMaximumSize(new Dimension(400, 44));
+        wrapperBusca.setMinimumSize(new Dimension(400, 44));
+
+        barra.add(wrapperBusca);
+
         campoFiltro = new JComboBox<String>(FILTRO_CATEGORIAS);
         campoFiltro.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         campoFiltro.setBackground(EstiloReAlimenta.BRANCO);
         campoFiltro.setPreferredSize(new Dimension(180, 44));
         campoFiltro.addActionListener(e -> filtrarLista());
-        barra.add(campoFiltro, BorderLayout.EAST);
+
+        barra.add(campoFiltro);
 
         campoBusca.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent e) { filtrarLista(); }
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                filtrarLista();
+            }
         });
+
         return barra;
     }
 
@@ -238,23 +256,22 @@ public class TelaMinhasPromocoes extends JFrame {
         RoundedPanel linha = new RoundedPanel(10, EstiloReAlimenta.BRANCO);
         linha.setLayout(new GridLayout(1, 7, 8, 0));
         linha.setBorder(new EmptyBorder(14, 16, 14, 16));
-
         // Imagem + nome
         JPanel celNome = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         celNome.setOpaque(false);
         JLabel icoProduto = EstiloReAlimenta.criarIcone(FontAwesomeSolid.APPLE_ALT, 20, EstiloReAlimenta.VERDE_PRINCIPAL);
-        JLabel lblNome = new JLabel(p.nomeAlimento);
+        JLabel lblNome = new JLabel(p.getAlimento().getNomeAlimento());
         lblNome.setFont(new Font("Segoe UI", Font.BOLD, 13));
         lblNome.setForeground(EstiloReAlimenta.TEXTO);
         celNome.add(icoProduto);
         celNome.add(lblNome);
         linha.add(celNome);
 
-        linha.add(criarCelula(p.categoria, false));
-        linha.add(criarCelula("R$ " + String.format("%.2f", p.precoOriginal), false));
-        linha.add(criarCelula(p.desconto + "%", true));
-        linha.add(criarCelula("R$ " + String.format("%.2f", calcularPrecoPromo(p.precoOriginal, p.desconto)), false));
-        linha.add(criarCelula(p.validade, false));
+        linha.add(criarCelula(p.getAlimento().getCategoria(), false));
+        linha.add(criarCelula("R$ " + String.format("%.2f", p.getAlimento().getValor()), false));
+        linha.add(criarCelula(p.getPercentualDesconto() + "%", true));
+        linha.add(criarCelula("R$ " + String.format("%.2f", calcularPrecoPromo(p.getAlimento().getValor(), p.getPercentualDesconto())), false));
+        linha.add(criarCelula(p.getFimPromocao().toString(), false));
         linha.add(criarColunaAcoes(p));
         return linha;
     }
@@ -270,9 +287,10 @@ public class TelaMinhasPromocoes extends JFrame {
         JPanel cel = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
         cel.setOpaque(false);
 
-        // Badge status
-        boolean ativa = "Ativa".equals(p.status);
-        JLabel badge = new JLabel(p.status);
+        String status = LocalDate.now().isAfter(p.getFimPromocao()) ? "Expirada" : "Ativa";
+        boolean ativa = "Ativa".equals(status);
+
+        JLabel badge = new JLabel(status);
         badge.setFont(new Font("Segoe UI", Font.BOLD, 11));
         badge.setForeground(Color.WHITE);
         badge.setBackground(ativa ? new Color(0x16, 0xA3, 0x4A) : new Color(0x6B, 0x72, 0x80));
@@ -280,15 +298,14 @@ public class TelaMinhasPromocoes extends JFrame {
         badge.setBorder(new EmptyBorder(2, 8, 2, 8));
         cel.add(badge);
 
-        // Botão editar
         JButton btnEditar = criarBotaoIcone(FontAwesomeSolid.EDIT, new Color(0x25, 0x63, 0xEB),
-                () -> JOptionPane.showMessageDialog(this, "Editar: " + p.nomeAlimento));
+                () -> JOptionPane.showMessageDialog(this, "Editar: " + p.getAlimento().getNomeAlimento()));
         cel.add(btnEditar);
 
-        // Botão excluir
         JButton btnExcluir = criarBotaoIcone(FontAwesomeSolid.TRASH_ALT, new Color(0xDC, 0x26, 0x26),
                 () -> confirmarExclusao(p));
         cel.add(btnExcluir);
+
         return cel;
     }
 
@@ -305,7 +322,7 @@ public class TelaMinhasPromocoes extends JFrame {
 
     private void confirmarExclusao(Promocao p) {
         int res = JOptionPane.showConfirmDialog(this,
-                "Deseja excluir a promoção de \"" + p.nomeAlimento + "\"?",
+                "Deseja excluir a promoção de \"" + p.getAlimento().getNomeAlimento() + "\"?",
                 "Confirmar exclusão", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (res == JOptionPane.YES_OPTION) {
             listaPromocoes.remove(p);
@@ -323,40 +340,21 @@ public class TelaMinhasPromocoes extends JFrame {
         String categoria = (String) campoFiltro.getSelectedItem();
         listaFiltrada.clear();
         for (Promocao p : listaPromocoes) {
-            boolean matchBusca = busca.isEmpty() || p.nomeAlimento.toLowerCase().contains(busca) || p.categoria.toLowerCase().contains(busca);
-            boolean matchCat = "Todas".equals(categoria) || p.categoria.equals(categoria);
+            boolean matchBusca = busca.isEmpty() || p.getAlimento().getNomeAlimento().toLowerCase().contains(busca) || p.getAlimento().getCategoria().toLowerCase().contains(busca);
+            boolean matchCat = "Todas".equals(categoria) || p.getAlimento().getCategoria().equals(categoria);
             if (matchBusca && matchCat) listaFiltrada.add(p);
         }
         renderizarLista();
     }
+    private void carregarPromocoes() {
+        PromocaoController controller = new PromocaoController();
 
-    // Mock de dados
-    private void popularMocks() {
-        listaPromocoes.add(new Promocao("Pão de Forma Integral", "Padaria",       8.90, 20, "31/05/2025", "Ativa"));
-        listaPromocoes.add(new Promocao("Iogurte Natural",        "Laticínios",    5.50, 15, "28/05/2025", "Ativa"));
-        listaPromocoes.add(new Promocao("Leite Integral 1L",      "Laticínios",    6.99, 10, "20/05/2025", "Expirada"));
-        listaPromocoes.add(new Promocao("Maçã Gala",              "Frutas e Verduras", 12.00, 25, "22/05/2025", "Ativa"));
-        listaPromocoes.add(new Promocao("Peito de Frango",        "Carnes",        18.90, 30, "19/05/2025", "Expirada"));
-        listaPromocoes.add(new Promocao("Arroz Parboilizado 5kg", "Grãos e Cereais", 32.00, 5, "30/06/2025", "Ativa"));
-    }
+        listaPromocoes = controller.listarPromocoesPorComerciante(
+                comerciante.getIdComerciante()
+        );
 
-    // Modelo de dados
-    public static class Promocao {
-        public String nomeAlimento;
-        public String categoria;
-        public double precoOriginal;
-        public int    desconto;
-        public String validade;
-        public String status;
-
-        public Promocao(String nomeAlimento, String categoria, double precoOriginal, int desconto, String validade, String status) {
-            this.nomeAlimento  = nomeAlimento;
-            this.categoria     = categoria;
-            this.precoOriginal = precoOriginal;
-            this.desconto      = desconto;
-            this.validade      = validade;
-            this.status        = status;
-        }
+        listaFiltrada.clear();
+        listaFiltrada.addAll(listaPromocoes);
     }
 
     // Navegação

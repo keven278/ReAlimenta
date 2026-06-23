@@ -8,6 +8,7 @@ public class Promocao {
     private Alimento alimento;
     private LocalDate inicio_promocao;
     private LocalDate fim_promocao;
+    private int percentual_desconto;
 
     public Promocao() {
     }
@@ -15,12 +16,14 @@ public class Promocao {
     public Promocao(int id_promocao,
                     Alimento alimento,
                     LocalDate inicio_promocao,
-                    LocalDate fim_promocao) {
+                    LocalDate fim_promocao,
+                    int percentual_desconto) {
 
         this.id_promocao = id_promocao;
         this.alimento = alimento;
         this.inicio_promocao = inicio_promocao;
         this.fim_promocao = fim_promocao;
+        this.percentual_desconto = percentual_desconto;
     }
 
     public int getIdPromocao() {
@@ -53,5 +56,19 @@ public class Promocao {
 
     public void setFimPromocao(LocalDate fim_promocao) {
         this.fim_promocao = fim_promocao;
+    }
+    public int getPercentualDesconto() {
+        return percentual_desconto;
+    }
+    public void setPercentualDesconto(int percentual_desconto) {
+        this.percentual_desconto = percentual_desconto;
+    }
+    public double getValorPromocional() {
+
+        double valorOriginal =
+                alimento.getValor();
+
+        return valorOriginal -
+                (valorOriginal * percentual_desconto / 100.0);
     }
 }

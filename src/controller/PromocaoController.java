@@ -3,13 +3,25 @@ package controller;
 import dao.PromocaoDAO;
 import model.Promocao;
 
+import java.util.List;
+
 public class PromocaoController {
-    private PromocaoDAO dao = new PromocaoDAO();
 
+    private PromocaoDAO promocaoDAO;
 
-    public void cadastrarPromocao(Promocao promocao){
-        promocao.setIdPromocao(promocao.getIdPromocao());
-        dao.inserir(promocao);
+    public PromocaoController() {
+        this.promocaoDAO = new PromocaoDAO();
     }
 
+    public void cadastrarPromocao(Promocao promocao) {
+        promocaoDAO.inserirPromocao(promocao);
+    }
+
+    public List<Promocao> listarPromocoesAtivas() {
+        return promocaoDAO.listarPromocoesAtivas();
+    }
+
+    public List<Promocao> listarPromocoesPorComerciante(int idComerciante) {
+        return promocaoDAO.listarPromocoesPorComerciante(idComerciante);
+    }
 }

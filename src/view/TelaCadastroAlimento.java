@@ -28,8 +28,10 @@ public class TelaCadastroAlimento extends JFrame {
     private JTextField    campoNome;
     private JComboBox<String> campoCategoria;
     private JTextField    campoValidade;
+    private JTextField    campoValor;
     private JSpinner      campoQuantidade;
     private JTextArea     campoDescricao;
+
 
     // Upload de imagem
     private JLabel        previewImagem;
@@ -205,6 +207,13 @@ public class TelaCadastroAlimento extends JFrame {
         campoValidade = new JTextField();
         painel.add(EstiloReAlimenta.criarCampoTexto(campoValidade, "DD/MM/AAAA", FontAwesomeSolid.CALENDAR_ALT));
         painel.add(Box.createVerticalStrut(16));
+        painel.add(EstiloReAlimenta.criarLabel("Valor (R$) *"));
+        painel.add(Box.createVerticalStrut(6));
+
+        //valor
+        campoValor = new JTextField();
+        painel.add(EstiloReAlimenta.criarCampoTexto(campoValor, "Ex: 12.50", FontAwesomeSolid.DOLLAR_SIGN));
+        painel.add(Box.createVerticalStrut(16));
 
         // Quantidade
         painel.add(EstiloReAlimenta.criarLabel("Quantidade Disponível *"));
@@ -348,9 +357,12 @@ public class TelaCadastroAlimento extends JFrame {
         previewImagem.repaint();
     }
 
+    // Navegação
+
     private void salvarAlimento() {
         String nome = campoNome.getText().trim();
         String validadeTexto = campoValidade.getText().trim();
+        String valorTexto = campoValor.getText().trim();
         String categoria = (String) campoCategoria.getSelectedItem();
         int quantidade = (Integer) campoQuantidade.getValue();
         String descricao = campoDescricao.getText().trim();
@@ -370,6 +382,11 @@ public class TelaCadastroAlimento extends JFrame {
             return;
         }
 
+        if (valorTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Informe o valor do alimento.", "Campo obrigatório", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         LocalDate validade;
 
         try {
@@ -377,6 +394,30 @@ public class TelaCadastroAlimento extends JFrame {
             validade = LocalDate.parse(validadeTexto, formato);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Data inválida. Use o formato DD/MM/AAAA.", "Data inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        double valor;
+
+        try {
+            valor = Double.parseDouble(valorTexto.replace(",", "."));
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Valor inválido. Use exemplo: 12.50 ou 12,50.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (validade.isBefore(LocalDate.now())) {
+            JOptionPane.showMessageDialog(this, "A validade não pode ser anterior à data atual.", "Data inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (valor <= 0) {
+            JOptionPane.showMessageDialog(this, "O valor deve ser maior que zero.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (quantidade <= 0) {
+            JOptionPane.showMessageDialog(this, "A quantidade deve ser maior que zero.", "Quantidade inválida", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -393,6 +434,7 @@ public class TelaCadastroAlimento extends JFrame {
                 validade,
                 caminhoImagem,
                 false,
+                valor,
                 quantidade,
                 descricao,
                 comerciante
@@ -409,8 +451,6 @@ public class TelaCadastroAlimento extends JFrame {
         dispose();
         new TelaDashboardComerciante(comerciante);
     }
-
-    // Navegação
     private void navegarDashboard()    { dispose(); new TelaDashboardComerciante(comerciante); }
     private void navegarAlimentos()    { dispose(); new TelaCadastroAlimento(comerciante); }
     private void navegarPromocoes()    { dispose(); new TelaMinhasPromocoes(comerciante); }

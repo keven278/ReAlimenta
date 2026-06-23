@@ -44,6 +44,7 @@ create table promocao(
                          id_alimento int,
                          inicio_promocao date,
                          fim_promocao date,
+                         percentual_desconto int,
                          foreign key (id_alimento) references alimento (id_alimento)
 );
 

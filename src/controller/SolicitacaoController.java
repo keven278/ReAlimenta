@@ -5,7 +5,7 @@ import model.Consumidor;
 import model.Solicitacao;
 
     public class SolicitacaoController {
-        private SolicitacaoDAO dao = new SolicitacaoDAO();
+        /*private SolicitacaoDAO dao = new SolicitacaoDAO();
 
 
         public void cadastrarSolicitacao(Consumidor consumidor) {
@@ -32,7 +32,7 @@ import model.Solicitacao;
             System.out.println("Mensagem para View: Registro removido com sucesso do sistema!");
         }
 
-
+*/
     }
 
 

@@ -162,7 +162,7 @@ public class TelaDoacoesComerciante extends JFrame {
         p.add(sub);
         p.add(Box.createVerticalStrut(16));
 
-        JButton btnNova = EstiloReAlimenta.criarBotaoPrimario("+ Nova Doação", e -> {dispose();new TelaNovaDoacao();});
+        JButton btnNova = EstiloReAlimenta.criarBotaoPrimario("+ Nova Doação", e -> {dispose();new TelaNovaDoacao(comerciante);});
         btnNova.setPreferredSize(new Dimension(200, 44));
         JPanel painelBotao = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         painelBotao.setOpaque(false);

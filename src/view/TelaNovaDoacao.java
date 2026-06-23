@@ -36,7 +36,7 @@ public class TelaNovaDoacao extends JFrame {
 
     // Construtor
     private Comerciante comerciante;
-    public TelaNovaDoacao() {
+    public TelaNovaDoacao(Comerciante comerciante) {
         this.comerciante=comerciante;
 
         configurarJanela();
